@@ -20,15 +20,24 @@ export class ProductsService {
     return productos;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: string) {
+    const producto = await this.productsModel.find({ _id: id });
+    return producto;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    const updatedItem = await this.productsModel.findOneAndUpdate(
+      { _id: id },
+      updateProductDto,
+      { new: true },
+    );
+    if (updatedItem) return updatedItem;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: string) {
+    const producto = await this.productsModel.deleteOne({ _id: id });
+    if (producto?.deletedCount) {
+      return `Se eliminó el producto`;
+    }
   }
 }
